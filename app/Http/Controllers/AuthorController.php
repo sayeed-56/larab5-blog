@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Author;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthorController extends Controller
 {
@@ -15,7 +17,7 @@ class AuthorController extends Controller
     public function index()
     {
         $data['title'] = 'List of Authors';
-        $data['authors'] = User::paginate(1);
+        $data['authors'] = Author::paginate(1);
         $data['serial'] = 1;
         return view('admin.author.index',$data);
     }
@@ -39,16 +41,26 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:authors',
+            'phone' => 'required|unique:authors',
+            'address' => 'required',
+
+        ]);
+        $data = $request->all();
+        Author::create($data);
+        session()->flash('message','Author created successfully');
+        return redirect()->route('author.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Author $author)
     {
         //
     }
@@ -56,34 +68,46 @@ class AuthorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Author $author)
     {
-        //
+        $data['title'] = 'Edit author';
+        $data['author'] = $author;
+        return view('admin.author.edit',$data);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Author $author)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$author->id,
+            'phone' => 'required|unique:users,phone,'.$author->id,
+            'address' => 'required',
+        ]);
+        $author->update($request->all());
+        session()->flash('message','Author updated successfully');
+        return redirect()->route('author.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Author $author)
     {
-        //
+        $author->delete();
+        session()->flash('message','Author deleted successfully');
+        return redirect()->route('author.index');
     }
 }
