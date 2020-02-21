@@ -23,8 +23,8 @@
         </div>
         <div class="form-group">
             <label for="address">Address</label>
-            <input type="text" value="{{ old('address',isset($author)?$author->address:null) }}" name="address" class="form-control" id="address" placeholder="Enter Address">
-            @error('phone')
+            <textarea type="text"  name="address" class="form-control" id="address" placeholder="Enter your Address" >{{ old('address',isset($author)?$author->address:null)}}</textarea>
+            @error('address')
             <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
