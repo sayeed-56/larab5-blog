@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Author;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -89,8 +88,8 @@ class AuthorController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$author->id,
-            'phone' => 'required|unique:users,phone,'.$author->id,
+            'email' => 'required|email|unique:authors,email,'.$author->id,
+            'phone' => 'required|unique:authors,phone,'.$author->id,
             'address' => 'required',
         ]);
         $author->update($request->all());
