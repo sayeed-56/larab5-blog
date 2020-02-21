@@ -17,8 +17,8 @@ class AuthorController extends Controller
     public function index()
     {
         $data['title'] = 'List of Authors';
-        $data['authors'] = Author::paginate(1);
-        $data['serial'] = 1;
+        $data['authors'] = Author::paginate(2);
+        $data['serial'] = managePaginationSerial($data['authors']);
         return view('admin.author.index',$data);
     }
 
